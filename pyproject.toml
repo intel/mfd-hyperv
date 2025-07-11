@@ -1,0 +1,54 @@
+[build-system]
+requires = [
+    "setuptools>=80.4.0",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[project]
+name = "mfd-hyperv"
+description = "Module for handling functionalities of HyperV hypervisor."
+requires-python = ">=3.10, <3.14"
+version = "2.0.0"
+dynamic = ["dependencies"]
+license-files = ["LICENSE.md", "AUTHORS.md"]
+readme = {file = "README.md", content-type = "text/markdown"}
+
+[project.urls]
+Homepage = "https://github.com/intel/mfd"
+Repository = "https://github.com/intel/mfd-hyperv"
+Issues = "https://github.com/intel/mfd-hyperv/issues"
+Changelog = "https://github.com/intel/mfd-hyperv/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+exclude = ["examples", "tests*", "sphinx-doc"]
+
+[tool.black]
+line-length = 119
+exclude = '''
+(
+    /(
+        \.eggs
+      | \.git
+      | \.hg
+      | \.mypy_cache
+      | \.tox
+      | \.venv
+      | _build
+      | buck-out
+      | build
+      | dist
+      | examples
+    )/
+    | setup.py
+)
+'''
+
+[tool.coverage.run]
+source_pkgs = ["mfd_hyperv"]
+
+[tool.coverage.report]
+exclude_also = ["if TYPE_CHECKING:"]
