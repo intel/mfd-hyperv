@@ -1,0 +1,5 @@
+mfd-common-libs >= 1.11.0, < 2
+mfd-typing >= 1.23.0, < 2
+mfd_connect >= 7.12.0, < 8
+mfd-ping >= 1.15.0, < 2
+mfd_network_adapter >= 14.0.0, < 15
