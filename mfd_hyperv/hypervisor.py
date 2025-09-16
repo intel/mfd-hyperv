@@ -649,7 +649,7 @@ class HypervHypervisor:
 
         Example:
         -------
-                52:54:00:66:16:7B in case of KVM and ip = 10.102.22.103
+                52:54:00:66:16:7B in case of Hyper-V and ip = 10.102.22.103
 
         :param ip: IP address
         :param guest_mac_prefix: first 3 bytes of MAC address that are const
