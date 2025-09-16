@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Tests for `mfd_hyperv` vswitch manager submodule."""
+
 from textwrap import dedent
 
 import pytest
@@ -288,9 +289,7 @@ class TestVswitchManager:
         vswitch_manager.rename_vswitch("vs_01", "vswitch_new_name")
 
         cmd = 'Rename-VMSwitch "vs_01" -NewName "vswitch_new_name"'
-        vswitch_manager.connection.execute_powershell.assert_called_with(
-            cmd, custom_exception=HyperVExecutionException
-        )
+        vswitch_manager.connection.execute_powershell.assert_called_with(cmd, custom_exception=HyperVExecutionException)
 
     def test_get_vswitch_mapping_one_vswitch_found(self, vswitch_manager):
         out = dedent(

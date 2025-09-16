@@ -647,7 +647,8 @@ class HypervHypervisor:
             XX:XX:XX - is constant part defined by 'guest_mac_prefix' field
             YY:YY:YY - 3 least significant octets from ip address
 
-            Example:
+        Example:
+        -------
                 52:54:00:66:16:7B in case of KVM and ip = 10.102.22.103
 
         :param ip: IP address
@@ -708,9 +709,7 @@ class HypervHypervisor:
 
         :param: dir_path: path to directory which has to be emptied
         """
-        logger.log(
-            level=log_levels.MODULE_DEBUG, msg=f"Remove all folders and files from {dir_path} after VMs cleanup"
-        )
+        logger.log(level=log_levels.MODULE_DEBUG, msg=f"Remove all folders and files from {dir_path} after VMs cleanup")
         self._connection.execute_powershell(
             "get-childitem -Recurse | remove-item -recurse -confirm:$false", cwd=dir_path
         )

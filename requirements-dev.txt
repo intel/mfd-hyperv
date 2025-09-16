@@ -1,12 +1,2 @@
 -r requirements-test.txt
-
-pydocstyle ~= 6.3.0
-flake8
-flake8-annotations
-flake8-builtins
-flake8-docstrings
-black ~= 25.1.0
-flake8-black ~= 0.3.6
-click ~= 8.2.1
-
 mfd-code-quality >= 1.2.0, < 2

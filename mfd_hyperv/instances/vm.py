@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Vm class."""
+
 import logging
 from dataclasses import asdict
 from time import sleep

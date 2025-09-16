@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """VMNetworkInterfaceAttributes class."""
+
 from enum import Enum
 
 
