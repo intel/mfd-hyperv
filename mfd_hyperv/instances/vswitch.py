@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Vswitch class."""
+
 import time
 from typing import Union, Dict, List, Optional
 

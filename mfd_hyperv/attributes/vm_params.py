@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """VMParams class."""
+
 from dataclasses import dataclass, fields
 from typing import Optional, Union
 

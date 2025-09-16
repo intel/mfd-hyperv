@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Tests for `mfd_hyperv` vm network interface."""
+
 from textwrap import dedent
 
 import pytest
@@ -66,9 +67,9 @@ class TestVNetworkInterface:
 
             """  # noqa: E501
         )
-        vmnic.vm.hyperv.vm_network_interface_manager.get_vm_interface_vlan.return_value = parse_powershell_list(
-            output
-        )[0]
+        vmnic.vm.hyperv.vm_network_interface_manager.get_vm_interface_vlan.return_value = parse_powershell_list(output)[
+            0
+        ]
         assert vmnic.get_vlan_id() == "21"
 
     def test_get_rdma_status(self, vmnic):
@@ -85,7 +86,7 @@ class TestVNetworkInterface:
             """  # noqa: E501
         )
 
-        vmnic.vm.hyperv.vm_network_interface_manager.get_vm_interface_rdma.return_value = parse_powershell_list(
-            output
-        )[0]
+        vmnic.vm.hyperv.vm_network_interface_manager.get_vm_interface_rdma.return_value = parse_powershell_list(output)[
+            0
+        ]
         assert vmnic.get_rdma_status()

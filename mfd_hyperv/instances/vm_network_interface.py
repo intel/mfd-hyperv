@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """VMNetworkInterface class."""
+
 import time
 from typing import Union, Dict, Optional
 

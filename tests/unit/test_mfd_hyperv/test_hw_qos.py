@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Tests for `hw_qos` package."""
+
 from textwrap import dedent
 
 import pytest

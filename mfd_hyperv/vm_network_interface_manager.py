@@ -1,6 +1,7 @@
 # Copyright (C) 2025 Intel Corporation
 # SPDX-License-Identifier: MIT
 """Module for Hyper-V VMNetworkInterfaceManager."""
+
 import logging
 from typing import TYPE_CHECKING, Union, List, Dict, Optional
 
