@@ -25,3 +25,24 @@ Changelog = "https://github.com/intel/mfd-hyperv/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 exclude = ["examples", "tests*", "sphinx-doc"]
+
+[tool.black]
+line-length = 119
+exclude = '''
+(
+    /(
+        \.eggs
+      | \.git
+      | \.hg
+      | \.mypy_cache
+      | \.tox
+      | \.venv
+      | _build
+      | buck-out
+      | build
+      | dist
+      | examples
+    )/
+    | setup.py
+)
+'''

@@ -1,0 +1,21 @@
+# Copyright (C) 2025 Intel Corporation
+# SPDX-License-Identifier: MIT
+repos:
+    - repo: local
+      hooks:
+      - id: code-format
+        name: code-format
+        entry: mfd-format-code
+        language: python
+        types: [ python ]
+        pass_filenames: false
+        verbose: true
+        additional_dependencies: [ mfd-code-quality==1.2.1 ]
+      - id: code-standard
+        name: code-standard
+        entry: mfd-code-standard
+        language: python
+        types: [ python ]
+        pass_filenames: false
+        verbose: true
+        additional_dependencies: [ mfd-code-quality==1.2.1 ]

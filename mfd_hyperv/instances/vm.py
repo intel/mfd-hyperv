@@ -3,18 +3,19 @@
 """Vm class."""
 
 import logging
-from dataclasses import asdict
 from time import sleep
 from typing import Dict, Union, List, TYPE_CHECKING
 
 from mfd_common_libs import add_logging_level, log_levels
 from mfd_connect import RPyCConnection, Connection
-from mfd_hyperv.attributes.vm_params import VMParams
-from mfd_hyperv.exceptions import HyperVException
-from mfd_hyperv.hypervisor import VMProcessorAttributes
+from mfd_host import Host
 from mfd_network_adapter import NetworkAdapterOwner
 from mfd_typing import MACAddress
 from mfd_typing.network_interface import InterfaceType
+
+from mfd_hyperv.attributes.vm_params import VMParams
+from mfd_hyperv.exceptions import HyperVException
+from mfd_hyperv.hypervisor import VMProcessorAttributes
 
 if TYPE_CHECKING:
     from mfd_hyperv import HyperV
@@ -25,8 +26,8 @@ logger = logging.getLogger(__name__)
 add_logging_level(level_name="MODULE_DEBUG", level_value=log_levels.MODULE_DEBUG)
 
 
-class VM:
-    """VM class."""
+class VM(Host):
+    """VM class that inherits from Host."""
 
     def __init__(
         self,
@@ -35,24 +36,26 @@ class VM:
         owner: NetworkAdapterOwner = None,
         hyperv: "HyperV" = None,
         connection_timeout: int = None,
+        **kwargs,
     ):
         """VM constructor."""
-        self.connection = connection
+        super().__init__(connection=connection, **kwargs)
         self.guest = NetworkAdapterOwner(connection=connection)
         self.attributes = {}
         self.owner = owner
         self._hyperv = None
         self.hyperv = hyperv
-
         self.connection_timeout = connection_timeout
-        self._propagate_params(vm_params)
+        self.mng_ip = vm_params.mng_ip
+        self.name = vm_params.name
+        self.vm_params = vm_params
 
     def __str__(self) -> str:
         return f"{self.name}"
 
     @property
     def hyperv(self) -> "HyperV":
-        """Hyperv property representing host's hyperv object.
+        """HyperV property representing host's HyperV object.
 
         :raises: HyperVException when this property is empty
         """
@@ -64,7 +67,7 @@ class VM:
 
     @property
     def interfaces(self) -> List["VMNetworkInterface"]:
-        """Hyperv property representing VM interfaces.
+        """HyperV property representing VM interfaces.
 
         :raises: HyperVException when this property is empty
         """
@@ -78,11 +81,6 @@ class VM:
     def hyperv(self, value: "HyperV") -> None:
         """Hyperv property setter."""
         self._hyperv = value
-
-    def _propagate_params(self, params: VMParams) -> None:
-        """Add VMParams as attributes of virtual machine object."""
-        for key, value in asdict(params).items():
-            setattr(self, key, value)
 
     def get_attributes(self) -> Dict[str, str]:
         """Get Virtual machine attributes from host (hypervisor)."""
@@ -131,7 +129,7 @@ class VM:
         self.wait_functional(timeout)
 
     def wait_functional(self, timeout: int = 300) -> None:
-        """Wait untill this VM can be pinged.
+        """Wait until this VM can be pinged.
 
         :param timeout: time given for VM to reach functional state
         """
@@ -166,13 +164,16 @@ class VM:
             logger.log(level=log_levels.MODULE_DEBUG, msg="Getting cached interfaces")
             return self.hyperv.vm_network_interface_manager.all_vnics_attributes[self.name]
         else:
-            logger.log(level=log_levels.MODULE_DEBUG, msg="Retrieving Vm interfaces seen from Hypervisor")
+            logger.log(
+                level=log_levels.MODULE_DEBUG,
+                msg="Retrieving Vm interfaces seen from Hypervisor",
+            )
             return self.get_vm_interfaces()
 
     def _check_vnic_correct_matching(self, created_vm_interfaces: List["VMNetworkInterface"]) -> None:
         """Check if matching was successful, if not raise Exception.
 
-        :param created_vm_interfaces: list of vnics after matching VM interfaces witt VM Guest OS interfaces
+        :param created_vm_interfaces: list of vNICs after matching VM interfaces with VM Guest OS interfaces
         """
         all_have_iface = all(hasattr(vnic, "interface") for vnic in created_vm_interfaces)
         if not all_have_iface:
