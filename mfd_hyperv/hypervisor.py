@@ -114,7 +114,10 @@ class HypervHypervisor:
             self._connection.execute_powershell(command=command, custom_exception=HyperVExecutionException)
 
         self.start_vm(vm_params.name)
-        mng_ip = self._wait_vm_mng_ips(vm_params.name)
+        try:
+            mng_ip = self._wait_vm_mng_ips(vm_params.name, timeout=180)
+        except HyperVException as e:
+            logger.error(f"Failed to get VM {vm_params.name} management IP: {e}")
         if dynamic_mng_ip:
             vm_params.mng_ip = mng_ip
 
