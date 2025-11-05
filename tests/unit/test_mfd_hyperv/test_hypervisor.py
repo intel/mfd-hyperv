@@ -119,6 +119,39 @@ class TestHypervisor:
         hypervisor.create_vm(vm_params, dynamic_mng_ip=True)
         assert len(hypervisor.vms) == 1
 
+    def test_create_vm_ip_not_found(self, mocker, hypervisor):
+        vm_params = VMParams(
+            name="vm_name",
+            cpu_count=4,
+            hw_threads_per_core=0,
+            memory=4096,
+            generation=2,
+            vm_dir_path="path",
+            diff_disk_path="diff_disk_path",
+            mng_interface_name="mng",
+            mng_mac_address=MACAddress("00:00:00:00:00:00"),
+            mng_ip="1.1.1.1",
+            vswitch_name="vswitch",
+        )
+        output = """
+            VMName      : Base_W19_VM001
+            IPAddresses : {192.168.1.1, fe80::6994:9bd4:d0aa:ff4d}
+            MacAddress  : 525A005BDA10
+        """
+
+        hypervisor._connection.execute_powershell.return_value = ConnectionCompletedProcess(
+            return_code=0, args="command", stdout=output, stderr="stderr"
+        )
+
+        mocker.patch("mfd_hyperv.hypervisor.HypervHypervisor.start_vm", return_value=None)
+        mocker.patch("mfd_hyperv.hypervisor.RPyCConnection", autospec=True)
+        mocker.patch("mfd_hyperv.hypervisor.VM", autospec=True)
+        mocker.patch.object(hypervisor, "_wait_vm_mng_ips", side_effect=HyperVException("No IP found"))
+
+        hypervisor.create_vm(vm_params, dynamic_mng_ip=False)
+        assert len(hypervisor.vms) == 1
+        assert vm_params.mng_ip == "1.1.1.1"
+
     def test_remove_vm_all(self, hypervisor_with_2_vms):
         hypervisor_with_2_vms._connection.execute_powershell.return_value = ConnectionCompletedProcess(
             return_code=0, args="command", stdout="stdout", stderr="stderr"
