@@ -14,12 +14,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python_version: ['3.10', '3.13']
-    uses: intel/mfd/.github/workflows/run_tests.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      REPOSITORY_NAME: ${{ github.event.pull_request.head.repo.full_name }}
-      BRANCH_NAME: ${{ github.head_ref }}
+    uses: intel/mfd/.github/workflows/run_tests.yml@main   
+    with:      
       PYTHON_VERSION: ${{ matrix.python_version }}
       RUNS_ON: ${{ matrix.os }}
       PROJECT_NAME: 'mfd-hyperv'
