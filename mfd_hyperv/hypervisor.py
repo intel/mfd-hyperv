@@ -86,6 +86,7 @@ class HypervHypervisor:
         hyperv: "HyperV" = None,
         connection_timeout: int = 3600,
         dynamic_mng_ip: bool = False,
+        wait_time: Optional[int] = None,
     ) -> VM:
         """Create a new VM using the specified vm_params.
 
@@ -94,6 +95,7 @@ class HypervHypervisor:
         :param hyperv: Hyperv object that will be used by Vm instance
         :param connection_timeout: timeout of RPyCConnection to VM
         :param dynamic_mng_ip: To enable or disable dynamic mng ip allocation
+        :param wait_time: amount of time a program waits
         """
         commands = [
             f'New-VM "{vm_params.name}" -Generation {vm_params.generation} -Path {vm_params.vm_dir_path}',
@@ -117,6 +119,9 @@ class HypervHypervisor:
         mng_ip = self._wait_vm_mng_ips(vm_params.name)
         if dynamic_mng_ip:
             vm_params.mng_ip = mng_ip
+
+        if wait_time:
+            time.sleep(wait_time)
 
         vm_connection = RPyCConnection(ip=vm_params.mng_ip, connection_timeout=connection_timeout)
         vm = VM(vm_connection, vm_params, owner, hyperv, connection_timeout)
