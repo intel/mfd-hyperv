@@ -50,16 +50,11 @@ class TestVM:
             vswitch_name="vswitch",
         )
 
-        vm_dict = vm.__dict__
-
-        del vm_dict["owner"]
-        del vm_dict["guest"]
-        del vm_dict["_hyperv"]
-        del vm_dict["attributes"]
-        del vm_dict["connection"]
-        del vm_dict["connection_timeout"]
+        vm_dict = vm.vm_params.__dict__
 
         assert vm_dict == vm_params.__dict__
+        assert vm.mng_ip == vm_params.mng_ip
+        assert vm.name == vm_params.name
 
     def test_get_attributes(self, vm, mocker):
         mocker.patch("mfd_hyperv.hypervisor.HypervHypervisor.get_vm_attributes", return_value="x")
