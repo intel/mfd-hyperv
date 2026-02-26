@@ -96,7 +96,9 @@ class VM:
         """
         self.hyperv.hypervisor.start_vm(self.name)
         self.hyperv.hypervisor.wait_vm_functional(self.name, self.mng_ip, timeout)
-        self.connection = RPyCConnection(self.mng_ip, connection_timeout=self.connection_timeout)
+        self.connection = RPyCConnection(
+            self.mng_ip, connection_timeout=self.connection_timeout, retry_timeout=timeout, retry_time=10
+        )
 
     def stop(self, timeout: int = 300) -> None:
         """Stop VM from host (hypervisor).
