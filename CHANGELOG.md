@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.1.2 (2026-02-26)
+
+### Bug Fixes
+
+- Enhance RPyCConnection with retry parameters for improved VM connection stability
+  ([`8997181`](https://github.com/intel/mfd-hyperv/commit/8997181bd2007f82b48d9b60b507c4f76da82142))
+
+
 ## v2.1.1 (2026-02-09)
 
 ### Bug Fixes
