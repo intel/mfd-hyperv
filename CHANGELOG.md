@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v2.1.3 (2026-03-20)
+
+### Bug Fixes
+
+- Split check of interface name and VM name inside set_vm_interface_vlan function
+  ([`a52bf04`](https://github.com/intel/mfd-hyperv/commit/a52bf0401d3a283d963411455500039af068d324))
+
+
 ## v2.1.2 (2026-02-26)
 
 ### Bug Fixes
