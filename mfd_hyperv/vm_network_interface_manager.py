@@ -199,8 +199,10 @@ class VMNetworkInterfaceManager:
         command = "Set-VMNetworkAdapterVlan "
         if management_os:
             command += "-ManagementOS "
-        if interface_name and vm_name:
-            command += f"-VMName {vm_name} -VMNetworkAdapterName {interface_name} "
+        if vm_name:
+            command += f"-VMName {vm_name} "
+        if interface_name:
+            command += f"-VMNetworkAdapterName {interface_name} "
 
         command += f"-{state} "
 

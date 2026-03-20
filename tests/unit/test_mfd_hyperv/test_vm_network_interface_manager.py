@@ -10,7 +10,7 @@ from mfd_connect import LocalConnection
 from mfd_connect.base import ConnectionCompletedProcess
 from mfd_typing import OSName
 
-from mfd_hyperv.exceptions import HyperVExecutionException
+from mfd_hyperv.exceptions import HyperVException, HyperVExecutionException
 from mfd_hyperv.vm_network_interface_manager import VMNetworkInterfaceManager, UNTAGGED_VLAN
 
 
@@ -241,6 +241,64 @@ class TestVMNetworkInterfaceManager:
         vlan_id = vmni_manager.get_vlan_id_for_vswitch("managementvSwitch")
         assert UNTAGGED_VLAN == vlan_id
         assert "Unsupported VLAN mode (Auto) detected" in caplog.messages[1]
+
+    def test_set_vm_interface_vlan_basic(self, vmni_manager):
+        vmni_manager.connection.execute_powershell.return_value = ConnectionCompletedProcess(
+            return_code=0, args="command", stdout="", stderr=""
+        )
+
+        vmni_manager.set_vm_interface_vlan(state="access", vm_name="vm1", interface_name="eth0")
+
+        vmni_manager.connection.execute_powershell.assert_called_with(
+            command="Set-VMNetworkAdapterVlan -VMName vm1 -VMNetworkAdapterName eth0 -access ",
+            expected_return_codes={},
+        )
+
+    def test_set_vm_interface_vlan_with_vlan_type_and_id(self, vmni_manager):
+        vmni_manager.connection.execute_powershell.return_value = ConnectionCompletedProcess(
+            return_code=0, args="command", stdout="", stderr=""
+        )
+
+        vmni_manager.set_vm_interface_vlan(
+            state="trunk", vm_name="vm1", interface_name="eth0", vlan_type="vlanid", vlan_id=100
+        )
+
+        vmni_manager.connection.execute_powershell.assert_called_with(
+            command="Set-VMNetworkAdapterVlan -VMName vm1 -VMNetworkAdapterName eth0 -trunk -vlanid 100",
+            expected_return_codes={},
+        )
+
+    def test_set_vm_interface_vlan_management_os(self, vmni_manager):
+        vmni_manager.connection.execute_powershell.return_value = ConnectionCompletedProcess(
+            return_code=0, args="command", stdout="", stderr=""
+        )
+
+        vmni_manager.set_vm_interface_vlan(state="untagged", management_os=True)
+
+        vmni_manager.connection.execute_powershell.assert_called_with(
+            command="Set-VMNetworkAdapterVlan -ManagementOS -untagged ",
+            expected_return_codes={},
+        )
+
+    def test_set_vm_interface_vlan_raises_on_error(self, vmni_manager):
+        vmni_manager.connection.execute_powershell.return_value = ConnectionCompletedProcess(
+            return_code=1, args="command", stdout="", stderr="error"
+        )
+
+        with pytest.raises(HyperVException):
+            vmni_manager.set_vm_interface_vlan(state="access", vm_name="vm1")
+
+    def test_set_vm_interface_vlan_invalid_state(self, vmni_manager):
+        with pytest.raises(AssertionError):
+            vmni_manager.set_vm_interface_vlan(state="invalid_state")
+
+    def test_set_vm_interface_vlan_invalid_vlan_type(self, vmni_manager):
+        vmni_manager.connection.execute_powershell.return_value = ConnectionCompletedProcess(
+            return_code=0, args="command", stdout="", stderr=""
+        )
+
+        with pytest.raises(AssertionError):
+            vmni_manager.set_vm_interface_vlan(state="access", vm_name="vm1", vlan_type="badtype", vlan_id=10)
 
     def test_get_vlan_id_for_vswitch_untagged_mode(self, vmni_manager):
         output1 = dedent(
