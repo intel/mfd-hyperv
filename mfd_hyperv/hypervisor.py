@@ -85,6 +85,8 @@ class HypervHypervisor:
         owner: Optional[NetworkAdapterOwner] = None,
         hyperv: "HyperV" = None,
         connection_timeout: int = 3600,
+        retry_timeout: int = 60,
+        retry_time: int = 5,
         dynamic_mng_ip: bool = False,
     ) -> VM:
         """Create a new VM using the specified vm_params.
@@ -93,6 +95,8 @@ class HypervHypervisor:
         :param owner: SUT host that will host new Vm
         :param hyperv: Hyperv object that will be used by Vm instance
         :param connection_timeout: timeout of RPyCConnection to VM
+        :param retry_timeout: total seconds RPyCConnection will retry on failure
+        :param retry_time: seconds between each RPyCConnection retry attempt
         :param dynamic_mng_ip: To enable or disable dynamic mng ip allocation
         """
         commands = [
@@ -121,7 +125,12 @@ class HypervHypervisor:
         if dynamic_mng_ip:
             vm_params.mng_ip = mng_ip
 
-        vm_connection = RPyCConnection(ip=vm_params.mng_ip, connection_timeout=connection_timeout)
+        vm_connection = RPyCConnection(
+            ip=vm_params.mng_ip,
+            connection_timeout=connection_timeout,
+            retry_timeout=retry_timeout,
+            retry_time=retry_time,
+        )
         vm = VM(vm_connection, vm_params, owner, hyperv, connection_timeout)
 
         self.vms.append(vm)
