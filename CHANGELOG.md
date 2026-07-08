@@ -2,6 +2,22 @@
 
 <!-- version list -->
 
+## v2.1.4 (2026-07-08)
+
+### Bug Fixes
+
+- Add retry_timeout and retry_time parameters to create_vm(), forwarded
+  ([`c6a2a61`](https://github.com/intel/mfd-hyperv/commit/c6a2a61843f22c611dd87d31cc28997f0afc6238))
+
+- Delegate VM RPyC readiness to RPyCConnection retry mechanism
+  ([`c6a2a61`](https://github.com/intel/mfd-hyperv/commit/c6a2a61843f22c611dd87d31cc28997f0afc6238))
+
+### Chores
+
+- Bump pytest and mfd-code-quality requirements
+  ([`d097bf4`](https://github.com/intel/mfd-hyperv/commit/d097bf4352edffd20a34ac807cb3feff8987779e))
+
+
 ## v2.1.3 (2026-03-20)
 
 ### Bug Fixes
